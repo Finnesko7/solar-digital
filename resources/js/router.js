@@ -1,6 +1,6 @@
 import VueRouter from "vue-router";
-import AllPosts from "./views/AllPosts";
-import SinglePost from "./views/SinglePost";
+import AllPosts from "./pages/AllPosts";
+import SinglePost from "./pages/SinglePost";
 
 export default new VueRouter({
     mode: 'history',
@@ -10,8 +10,9 @@ export default new VueRouter({
             component: AllPosts
         },
         {
-            path: '/post',
-            component: SinglePost
+            path: '/post/:id',
+            component: SinglePost,
+            props: true
         }
     ],
 })

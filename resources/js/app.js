@@ -9,7 +9,7 @@ window.Vue = require('vue');
 
 import VueRouter from "vue-router";
 import router from "./router";
-import App from "./components/App";
+import App from "./pages/App";
 
 /**
  * The following block of code may be used to automatically register your

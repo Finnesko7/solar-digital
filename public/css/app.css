@@ -10904,3 +10904,25 @@ a.text-dark:focus {
   }
 }
 
+body {
+  position: relative;
+  padding-top: 70px;
+  padding-bottom: 70px;
+}
+
+body .main-app {
+  min-height: 100vh;
+}
+
+body .post-list {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+

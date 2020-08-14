@@ -1,0 +1,21 @@
+body {
+    position: relative;
+    padding-top: 70px;
+    padding-bottom: 70px;
+
+    .main-app {
+        min-height: 100vh;
+    }
+
+    .post-list {
+        display: flex;
+        flex-wrap: wrap;
+    }
+}
+
+footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
