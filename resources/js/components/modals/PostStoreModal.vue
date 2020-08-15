@@ -1,5 +1,5 @@
 <template>
-    <div class="modal fade" id="modalPost" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" v-bind:class="{show: showModal}" id="modalPost" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -46,6 +46,8 @@
         props: {
             postId: [Number, null],
             showModal: Boolean,
+            callbackCloseModal: Function,
+            callbackGetPosts: Function
         },
         data() {
           return {
@@ -66,7 +68,39 @@
                     })
             },
             postSave: function () {
+                let post = {
+                    title: this.title,
+                    description: this.description,
+                    image: this.image,
+                    text: this.text
+                };
 
+                if (this.postId) {
+                    fetch(`/api/post/${this.postId}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-type': 'application/json; charset=UTF-8'
+                        },
+                        body: JSON.stringify(post)
+                    }).then(response => response.json())
+                        .then(post => {
+                            if (post) this.callbackCloseModal();
+                        })
+                } else {
+                    fetch(`/api/post`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-type': 'application/json; charset=UTF-8'
+                        },
+                        body: JSON.stringify(post)
+                    }).then(response => response.json())
+                    .then(post => {
+                        if(post.id) {
+                            this.callbackGetPosts()
+                            this.callbackCloseModal();
+                        }
+                    })
+                }
             }
         },
         watch: {

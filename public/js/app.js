@@ -2096,7 +2096,9 @@ __webpack_require__.r(__webpack_exports__);
   name: "PostStoreModal",
   props: {
     postId: [Number, null],
-    showModal: Boolean
+    showModal: Boolean,
+    callbackCloseModal: Function,
+    callbackGetPosts: Function
   },
   data: function data() {
     return {
@@ -2119,7 +2121,46 @@ __webpack_require__.r(__webpack_exports__);
         _this.text = data.text;
       });
     },
-    postSave: function postSave() {}
+    postSave: function postSave() {
+      var _this2 = this;
+
+      var post = {
+        title: this.title,
+        description: this.description,
+        image: this.image,
+        text: this.text
+      };
+
+      if (this.postId) {
+        fetch("/api/post/".concat(this.postId), {
+          method: 'PUT',
+          headers: {
+            'Content-type': 'application/json; charset=UTF-8'
+          },
+          body: JSON.stringify(post)
+        }).then(function (response) {
+          return response.json();
+        }).then(function (post) {
+          if (post) _this2.callbackCloseModal();
+        });
+      } else {
+        fetch("/api/post", {
+          method: 'POST',
+          headers: {
+            'Content-type': 'application/json; charset=UTF-8'
+          },
+          body: JSON.stringify(post)
+        }).then(function (response) {
+          return response.json();
+        }).then(function (post) {
+          if (post.id) {
+            _this2.callbackGetPosts();
+
+            _this2.callbackCloseModal();
+          }
+        });
+      }
+    }
   },
   watch: {
     postId: function postId() {
@@ -2177,11 +2218,25 @@ __webpack_require__.r(__webpack_exports__);
     title: String,
     description: String,
     image: String,
-    callbackEditPost: Function
+    callbackEditPost: Function,
+    callbackGetPosts: Function
   },
   methods: {
     showModal: function showModal() {
       this.callbackEditPost(this.id);
+    },
+    remove: function remove() {
+      var _this = this;
+
+      fetch("/api/post/".concat(this.id), {
+        method: 'DELETE'
+      }).then(function (response) {
+        return response.json();
+      }).then(function (data) {
+        if (!data.success) alert('Post not found!');
+
+        _this.callbackGetPosts();
+      });
     }
   }
 });
@@ -2325,6 +2380,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2360,6 +2418,9 @@ __webpack_require__.r(__webpack_exports__);
       this.postId = id;
       $(this.$refs.modal.$el).modal('show');
       this.modalMounted = true;
+    },
+    closeModal: function closeModal() {
+      $(this.$refs.modal.$el).modal('hide');
     }
   },
   mounted: function mounted() {
@@ -38328,6 +38389,7 @@ var render = function() {
     "div",
     {
       staticClass: "modal fade",
+      class: { show: _vm.showModal },
       attrs: {
         id: "modalPost",
         tabindex: "-1",
@@ -38567,7 +38629,11 @@ var render = function() {
               [_c("i", { staticClass: "fas fa-pencil-alt" })]
             ),
             _vm._v(" "),
-            _vm._m(0),
+            _c(
+              "button",
+              { staticClass: "btn badge-danger", on: { click: _vm.remove } },
+              [_c("i", { staticClass: "fas fa-trash" })]
+            ),
             _vm._v(" "),
             _c(
               "a",
@@ -38583,16 +38649,7 @@ var render = function() {
     ]
   )
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("button", { staticClass: "btn badge-danger" }, [
-      _c("i", { staticClass: "fas fa-trash" })
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -38793,7 +38850,13 @@ var render = function() {
             return _c(
               "Card",
               _vm._b(
-                { key: post.id, attrs: { callbackEditPost: _vm.editPost } },
+                {
+                  key: post.id,
+                  attrs: {
+                    callbackEditPost: _vm.editPost,
+                    callbackGetPosts: _vm.getPosts
+                  }
+                },
                 "Card",
                 post,
                 false
@@ -38805,7 +38868,12 @@ var render = function() {
         _vm._v(" "),
         _c("PostStoreModal", {
           ref: "modal",
-          attrs: { showModal: _vm.showModal, postId: _vm.postId }
+          attrs: {
+            showModal: _vm.showModal,
+            postId: _vm.postId,
+            callbackCloseModal: _vm.closeModal,
+            callbackGetPosts: _vm.getPosts
+          }
         })
       ],
       1

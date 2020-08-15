@@ -7,12 +7,15 @@
                 <Card v-for="post in posts" :key="post.id"
                       v-bind="post"
                       v-bind:callbackEditPost="editPost"
-                ></Card>
+                      v-bind:callbackGetPosts="getPosts"
+                />
             </div>
 
             <PostStoreModal
                 v-bind:showModal="showModal"
                 v-bind:postId="postId"
+                v-bind:callbackCloseModal="closeModal"
+                v-bind:callbackGetPosts="getPosts"
                 ref="modal"
             />
         </div>
@@ -53,6 +56,9 @@
                 this.postId = id;
                 $(this.$refs.modal.$el).modal('show')
                 this.modalMounted = true
+            },
+            closeModal: function () {
+                $(this.$refs.modal.$el).modal('hide')
             }
         },
         mounted() {

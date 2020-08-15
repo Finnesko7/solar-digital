@@ -9,7 +9,7 @@
                     <button class="btn btn-light" v-on:click="showModal">
                         <i class="fas fa-pencil-alt"></i>
                     </button>
-                    <button class="btn badge-danger">
+                    <button class="btn badge-danger" v-on:click="remove">
                         <i class="fas fa-trash"></i>
                     </button>
                     <a v-bind:href="`/post/${id}`" class="btn btn-primary">See post</a>
@@ -27,11 +27,21 @@
             title: String,
             description: String,
             image: String,
-            callbackEditPost: Function
+            callbackEditPost: Function,
+            callbackGetPosts: Function
         },
         methods: {
             showModal: function () {
                 this.callbackEditPost(this.id)
+            },
+            remove: function () {
+                fetch(`/api/post/${this.id}`, {
+                    method: 'DELETE'
+                }).then(response => response.json())
+                .then(data => {
+                    if (!data.success) alert('Post not found!')
+                    this.callbackGetPosts()
+                })
             }
         }
     }
