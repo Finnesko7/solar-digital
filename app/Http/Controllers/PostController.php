@@ -2,19 +2,27 @@
 
 namespace App\Http\Controllers;
 
+use App\Repositories\PostRepository;
 use Illuminate\Routing\Controller as BaseController;
 
 class PostController extends BaseController
 {
+    private $postRepository;
+
+    public function __construct(PostRepository $postRepository)
+    {
+        $this->postRepository = $postRepository;
+    }
+
     public function show($id)
     {
-        return response()->json([
-            'id' => 25,
-            'title' => 'React',
-            'description' => '',
-            'text' => 'Some text ...',
-            'created_at' => 'January 1, 2019 at 12:00 PM',
-            'image' => 'https://icons-for-free.com/iconfiles/png/512/design+development+facebook+framework+mobile+react+icon-1320165723839064798.png'
-        ]);
+        $post = $this->postRepository->getPostById($id);
+        return response()->json($post);
+    }
+
+    public function all()
+    {
+        $posts = $this->postRepository->getAllPosts();
+        return response()->json($posts);
     }
 }

@@ -1,6 +1,50 @@
 /******/ (function(modules) { // webpackBootstrap
+/******/ 	// install a JSONP callback for chunk loading
+/******/ 	function webpackJsonpCallback(data) {
+/******/ 		var chunkIds = data[0];
+/******/ 		var moreModules = data[1];
+/******/
+/******/
+/******/ 		// add "moreModules" to the modules object,
+/******/ 		// then flag all "chunkIds" as loaded and fire callback
+/******/ 		var moduleId, chunkId, i = 0, resolves = [];
+/******/ 		for(;i < chunkIds.length; i++) {
+/******/ 			chunkId = chunkIds[i];
+/******/ 			if(Object.prototype.hasOwnProperty.call(installedChunks, chunkId) && installedChunks[chunkId]) {
+/******/ 				resolves.push(installedChunks[chunkId][0]);
+/******/ 			}
+/******/ 			installedChunks[chunkId] = 0;
+/******/ 		}
+/******/ 		for(moduleId in moreModules) {
+/******/ 			if(Object.prototype.hasOwnProperty.call(moreModules, moduleId)) {
+/******/ 				modules[moduleId] = moreModules[moduleId];
+/******/ 			}
+/******/ 		}
+/******/ 		if(parentJsonpFunction) parentJsonpFunction(data);
+/******/
+/******/ 		while(resolves.length) {
+/******/ 			resolves.shift()();
+/******/ 		}
+/******/
+/******/ 	};
+/******/
+/******/
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
+/******/
+/******/ 	// object to store loaded and loading chunks
+/******/ 	// undefined = chunk not loaded, null = chunk preloaded/prefetched
+/******/ 	// Promise = chunk loading, 0 = chunk loaded
+/******/ 	var installedChunks = {
+/******/ 		"/js/app": 0
+/******/ 	};
+/******/
+/******/
+/******/
+/******/ 	// script path function
+/******/ 	function jsonpScriptSrc(chunkId) {
+/******/ 		return __webpack_require__.p + "" + ({}[chunkId]||chunkId) + ".js"
+/******/ 	}
 /******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
@@ -26,6 +70,67 @@
 /******/ 		return module.exports;
 /******/ 	}
 /******/
+/******/ 	// This file contains only the entry chunk.
+/******/ 	// The chunk loading function for additional chunks
+/******/ 	__webpack_require__.e = function requireEnsure(chunkId) {
+/******/ 		var promises = [];
+/******/
+/******/
+/******/ 		// JSONP chunk loading for javascript
+/******/
+/******/ 		var installedChunkData = installedChunks[chunkId];
+/******/ 		if(installedChunkData !== 0) { // 0 means "already installed".
+/******/
+/******/ 			// a Promise means "currently loading".
+/******/ 			if(installedChunkData) {
+/******/ 				promises.push(installedChunkData[2]);
+/******/ 			} else {
+/******/ 				// setup Promise in chunk cache
+/******/ 				var promise = new Promise(function(resolve, reject) {
+/******/ 					installedChunkData = installedChunks[chunkId] = [resolve, reject];
+/******/ 				});
+/******/ 				promises.push(installedChunkData[2] = promise);
+/******/
+/******/ 				// start chunk loading
+/******/ 				var script = document.createElement('script');
+/******/ 				var onScriptComplete;
+/******/
+/******/ 				script.charset = 'utf-8';
+/******/ 				script.timeout = 120;
+/******/ 				if (__webpack_require__.nc) {
+/******/ 					script.setAttribute("nonce", __webpack_require__.nc);
+/******/ 				}
+/******/ 				script.src = jsonpScriptSrc(chunkId);
+/******/
+/******/ 				// create error before stack unwound to get useful stacktrace later
+/******/ 				var error = new Error();
+/******/ 				onScriptComplete = function (event) {
+/******/ 					// avoid mem leaks in IE.
+/******/ 					script.onerror = script.onload = null;
+/******/ 					clearTimeout(timeout);
+/******/ 					var chunk = installedChunks[chunkId];
+/******/ 					if(chunk !== 0) {
+/******/ 						if(chunk) {
+/******/ 							var errorType = event && (event.type === 'load' ? 'missing' : event.type);
+/******/ 							var realSrc = event && event.target && event.target.src;
+/******/ 							error.message = 'Loading chunk ' + chunkId + ' failed.\n(' + errorType + ': ' + realSrc + ')';
+/******/ 							error.name = 'ChunkLoadError';
+/******/ 							error.type = errorType;
+/******/ 							error.request = realSrc;
+/******/ 							chunk[1](error);
+/******/ 						}
+/******/ 						installedChunks[chunkId] = undefined;
+/******/ 					}
+/******/ 				};
+/******/ 				var timeout = setTimeout(function(){
+/******/ 					onScriptComplete({ type: 'timeout', target: script });
+/******/ 				}, 120000);
+/******/ 				script.onerror = script.onload = onScriptComplete;
+/******/ 				document.head.appendChild(script);
+/******/ 			}
+/******/ 		}
+/******/ 		return Promise.all(promises);
+/******/ 	};
 /******/
 /******/ 	// expose the modules object (__webpack_modules__)
 /******/ 	__webpack_require__.m = modules;
@@ -78,6 +183,16 @@
 /******/
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "/";
+/******/
+/******/ 	// on error function for async loading
+/******/ 	__webpack_require__.oe = function(err) { console.error(err); throw err; };
+/******/
+/******/ 	var jsonpArray = window["webpackJsonp"] = window["webpackJsonp"] || [];
+/******/ 	var oldJsonpFunction = jsonpArray.push.bind(jsonpArray);
+/******/ 	jsonpArray.push = webpackJsonpCallback;
+/******/ 	jsonpArray = jsonpArray.slice();
+/******/ 	for(var i = 0; i < jsonpArray.length; i++) webpackJsonpCallback(jsonpArray[i]);
+/******/ 	var parentJsonpFunction = oldJsonpFunction;
 /******/
 /******/
 /******/ 	// Load entry module and return exports
@@ -2068,8 +2183,23 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  name: "Card"
+  name: 'Card',
+  props: {
+    id: Number,
+    title: String,
+    description: String,
+    image: String,
+    callbackEditPost: Function
+  },
+  methods: {
+    showModal: function showModal() {
+      this.callbackEditPost(this.id);
+    }
+  }
 });
 
 /***/ }),
@@ -2195,28 +2325,65 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+var PostModal = function PostModal() {
+  return __webpack_require__.e(/*! import() */ 1).then(__webpack_require__.bind(null, /*! ../components/modals/PostStoreModal */ "./resources/js/components/modals/PostStoreModal.vue"));
+};
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "AllPosts",
   components: {
+    PostModal: PostModal,
     Card: _components_post_Card__WEBPACK_IMPORTED_MODULE_0__["default"]
   },
   data: function data() {
     return {
-      posts: []
+      posts: [],
+      postId: null,
+      showModal: false,
+      modalMounted: false
     };
   },
   methods: {
     getPosts: function getPosts() {
       var _this = this;
 
-      fetch('http://jsonplaceholder.typicode.com/posts').then(function (response) {
+      fetch('/api/posts').then(function (response) {
         return response.json();
       }).then(function (data) {
-        data.length = 10;
         _this.posts = data;
         console.log("posts", data);
       });
+    },
+    editPost: function editPost(id) {
+      this.showModal = true;
+      this.postId = id;
+
+      if (this.modalMounted) {
+        this.showModalPost();
+      }
+    },
+    showModalPost: function showModalPost() {
+      $(this.$refs.modal.$el).modal('show');
+      this.modalMounted = true;
     }
   },
   mounted: function mounted() {
@@ -38181,51 +38348,54 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
+  return _c(
+    "div",
+    { staticClass: "card m-2", staticStyle: { width: "18rem" } },
+    [
+      _c("img", {
+        staticClass: "card-img-top",
+        attrs: { src: _vm.image, alt: "" }
+      }),
+      _vm._v(" "),
+      _c("div", { staticClass: "card-body" }, [
+        _c("h5", { staticClass: "card-title" }, [_vm._v(_vm._s(_vm.title))]),
+        _vm._v(" "),
+        _c("blockquote", { staticClass: "mb-0" }, [
+          _c("p", { staticClass: "card-text mb-5" }, [
+            _vm._v(_vm._s(_vm.description))
+          ]),
+          _vm._v(" "),
+          _c("footer", { staticClass: "p-2" }, [
+            _c(
+              "button",
+              { staticClass: "btn btn-light", on: { click: _vm.showModal } },
+              [_c("i", { staticClass: "fas fa-pencil-alt" })]
+            ),
+            _vm._v(" "),
+            _vm._m(0),
+            _vm._v(" "),
+            _c(
+              "a",
+              {
+                staticClass: "btn btn-primary",
+                attrs: { href: "/post/" + _vm.id }
+              },
+              [_vm._v("See post")]
+            )
+          ])
+        ])
+      ])
+    ]
+  )
 }
 var staticRenderFns = [
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c(
-      "div",
-      { staticClass: "card m-2", staticStyle: { width: "18rem" } },
-      [
-        _c("img", {
-          staticClass: "card-img-top",
-          attrs: {
-            src:
-              "https://icons-for-free.com/iconfiles/png/512/design+development+facebook+framework+mobile+react+icon-1320165723839064798.png",
-            alt: ""
-          }
-        }),
-        _vm._v(" "),
-        _c("div", { staticClass: "card-body" }, [
-          _c("h5", { staticClass: "card-title" }, [_vm._v("React")]),
-          _vm._v(" "),
-          _c("p", { staticClass: "card-text" }, [
-            _vm._v(
-              "Some quick example text to build on the card title and make up the bulk of the\n            card's content."
-            )
-          ]),
-          _vm._v(" "),
-          _c("button", { staticClass: "btn btn-light" }, [
-            _c("i", { staticClass: "fas fa-pencil-alt" })
-          ]),
-          _vm._v(" "),
-          _c("button", { staticClass: "btn badge-danger" }, [
-            _c("i", { staticClass: "fas fa-trash" })
-          ]),
-          _vm._v(" "),
-          _c(
-            "a",
-            { staticClass: "btn btn-primary", attrs: { href: "/post/21" } },
-            [_vm._v("See post")]
-          )
-        ])
-      ]
-    )
+    return _c("button", { staticClass: "btn badge-danger" }, [
+      _c("i", { staticClass: "fas fa-trash" })
+    ])
   }
 ]
 render._withStripped = true
@@ -38403,14 +38573,45 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    { staticClass: "container post-list" },
-    _vm._l(_vm.posts, function(post) {
-      return _c("Card", { key: post.id })
-    }),
-    1
-  )
+  return _c("div", [
+    _c(
+      "div",
+      { staticClass: "container" },
+      [
+        _c(
+          "button",
+          { staticClass: "btn btn-info", on: { click: _vm.showModalPost } },
+          [_vm._v("Create post")]
+        ),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: " post-list" },
+          _vm._l(_vm.posts, function(post) {
+            return _c(
+              "Card",
+              _vm._b(
+                { key: post.id, attrs: { callbackEditPost: _vm.editPost } },
+                "Card",
+                post,
+                false
+              )
+            )
+          }),
+          1
+        ),
+        _vm._v(" "),
+        _vm.showModal
+          ? _c("PostModal", {
+              ref: "modal",
+              attrs: { showModal: _vm.showModal, postId: _vm.postId },
+              on: { "hook:mounted": _vm.showModalPost }
+            })
+          : _vm._e()
+      ],
+      1
+    )
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -54568,8 +54769,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /home/user/Desktop/finnesko/test-vue-post/resources/js/app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! /home/user/Desktop/finnesko/test-vue-post/resources/sass/app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\laragon\www\solar-digital-test\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\laragon\www\solar-digital-test\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })
