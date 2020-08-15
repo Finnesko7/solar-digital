@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="container">
-            <button class="btn btn-info" v-on:click="showModalPost">Create post</button>
+            <button class="btn btn-info" v-on:click="showModalPost(null)">Create post</button>
 
             <div class=" post-list">
                 <Card v-for="post in posts" :key="post.id"
@@ -10,11 +10,9 @@
                 ></Card>
             </div>
 
-            <PostModal
-                v-if="showModal"
+            <PostStoreModal
                 v-bind:showModal="showModal"
                 v-bind:postId="postId"
-                @hook:mounted="showModalPost"
                 ref="modal"
             />
         </div>
@@ -23,12 +21,11 @@
 
 <script>
     import Card from "../components/post/Card";
-
-    const PostModal = () => import("../components/modals/PostStoreModal");
+    import PostStoreModal from "../components/modals/PostStoreModal";
 
     export default {
         name: "AllPosts",
-        components: {PostModal, Card},
+        components: {PostStoreModal, Card},
         data() {
             return {
                 posts: [],
@@ -50,13 +47,10 @@
             },
             editPost: function (id) {
                 this.showModal = true;
-                this.postId = id;
-
-                if (this.modalMounted) {
-                    this.showModalPost()
-                }
+                this.showModalPost(id)
             },
-            showModalPost: function () {
+            showModalPost: function (id) {
+                this.postId = id;
                 $(this.$refs.modal.$el).modal('show')
                 this.modalMounted = true
             }

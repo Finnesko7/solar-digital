@@ -33,7 +33,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" v-on:click="postSave">Save</button>
+                    <button type="button" class="btn btn-primary" v-on:click="postSave">{{ postId ? 'Save' : 'Create' }} post</button>
                 </div>
             </div>
         </div>
@@ -57,15 +57,13 @@
         },
         methods: {
             getPostById: function () {
-                if (this.postId) {
-                    fetch(`/api/post/${this.postId}`).then(response => response.json())
-                        .then(data => {
-                            this.title = data.title;
-                            this.description = data.description;
-                            this.image = data.image;
-                            this.text = data.text;
-                        })
-                }
+                fetch(`/api/post/${this.postId}`).then(response => response.json())
+                    .then(data => {
+                        this.title = data.title;
+                        this.description = data.description;
+                        this.image = data.image;
+                        this.text = data.text;
+                    })
             },
             postSave: function () {
 
@@ -73,11 +71,18 @@
         },
         watch: {
             postId: function () {
-                this.getPostById()
+                if (this.postId) {
+                    this.getPostById()
+                } else {
+                    this.title = '';
+                    this.description = '';
+                    this.image = '';
+                    this.text = '';
+                }
             }
         },
         mounted() {
-            this.getPostById()
+            if (this.postId) this.getPostById()
         }
     }
 </script>
