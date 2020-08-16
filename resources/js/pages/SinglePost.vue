@@ -13,7 +13,7 @@
                 <hr>
                     {{ post.text }}
                 <hr>
-                <CommentsForm/>
+                <Comment/>
             </div>
 
             <div class="col-md-4">
@@ -29,12 +29,12 @@
 import Search from "../components/post/Search";
 import Categories from "../components/post/Categories";
 import Side from "../components/post/Side";
-import CommentsForm from "../components/comments/CommentsForm";
+import Comment from "../components/comments/Comment";
 
 
 export default {
     name: "SinglePost",
-    components: {Search, Categories, Side, CommentsForm},
+    components: {Search, Categories, Side, Comment},
     props: ['id'],
     data() {
       return {
