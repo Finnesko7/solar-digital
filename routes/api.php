@@ -20,5 +20,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::get('posts', 'PostController@all');
 Route::resource('post', 'PostController');
-Route::resource('comment', 'CommentController')->only(['store']);
+Route::resource('comment', 'CommentController')->only(['store', 'destroy']);
 Route::get('comments/{post}', 'CommentController@all');
+Route::get('comments/sub/{comment}', 'CommentController@getSubComments');

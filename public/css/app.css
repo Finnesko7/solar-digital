@@ -10926,3 +10926,18 @@ footer {
   right: 0;
 }
 
+.media .media-body .comment-footer {
+  font-size: 8pt;
+  color: gray;
+  text-align: end;
+}
+
+.media .media-body .comment-footer .see-all-comments {
+  cursor: pointer;
+}
+
+.media .media-body .comment-buttons {
+  display: flex;
+  justify-content: end;
+}
+

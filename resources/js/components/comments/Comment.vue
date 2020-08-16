@@ -13,20 +13,88 @@
 <!--        </div>-->
 <!--    </div>-->
 
-    <div class="media mb-4">
+    <div class="media mb-4" v-if="!deleted">
         <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
         <div class="media-body">
             <h5 class="mt-0">Author</h5>
-            Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin.
-            Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc
-            ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
+
+            <div class="comment-buttons">
+                <button class="btn btn-light btn-sm" v-on:click="edit">
+                    <i class="fas fa-pencil-alt"></i>
+                </button>
+                <button class="btn badge-danger btn-sm" v-on:click="remove">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+            {{message}}
+
+            <SubComment
+                v-if="showSubComments"
+                v-bind:subComments="subComments"
+            />
+
+            <div class="comment-footer" v-if="!showSubComments">
+                <div>
+                    {{created_at}}
+                </div>
+                <div class="see-all-comments" v-if="count" v-on:click="getSubComments">
+                    See all comments ({{count}})
+                </div>
+            </div>
         </div>
+
     </div>
 </template>
 
 <script>
+import SubComment from "./SubComment";
 export default {
-    name: "Comment"
+    name: "Comment",
+    components: {SubComment},
+    props: {
+        id: Number,
+        message: String,
+        count: Number,
+        created_at: String,
+        callbackShowEditModal: Function
+    },
+    data() {
+      return {
+          deleted: false,
+          subComments: [],
+          showSubComments: false
+      }
+    },
+    methods: {
+        remove: function () {
+            if(this.count > 0) {
+                let success = confirm("This comment have a sub comments. All sub comments will be deleted");
+
+                if (!success) return false;
+            }
+
+            fetch(`/api/comment/${this.id}`, {
+                method: 'DELETE'
+            }).then(response => response.json())
+            .then(data => {
+                if (data.success) this.deleted = true;
+            })
+        },
+        edit: function () {
+            this.callbackShowEditModal({
+                id: this.id,
+                message: this.message
+            })
+        },
+        getSubComments: function () {
+            fetch(`/api/comments/sub/${this.id}`).then(response => response.json())
+                .then(data => {
+                    console.log("data sub comments:", data)
+                    this.subComments = data;
+                    this.showSubComments = true;
+                })
+        }
+    }
 }
 </script>
 

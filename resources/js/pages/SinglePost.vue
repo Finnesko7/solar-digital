@@ -13,7 +13,11 @@
                 <hr>
                     {{ post.text }}
                 <hr>
-                <Comment/>
+                <Comment
+                    v-for="comment in comments" :key="comment.id"
+                    v-bind="comment"
+                    v-bind:callbackShowEditModal="showEditModal"
+                />
             </div>
 
             <div class="col-md-4">
@@ -21,6 +25,12 @@
                 <Categories/>
                 <Side/>
             </div>
+
+            <EditCommentModal
+                v-bind:message="message"
+                v-bind:id="commentId"
+                ref="editCommentModal"
+            />
         </div>
     </div>
 </template>
@@ -30,15 +40,19 @@ import Search from "../components/post/Search";
 import Categories from "../components/post/Categories";
 import Side from "../components/post/Side";
 import Comment from "../components/comments/Comment";
+import EditCommentModal from "../components/modals/EditCommentModal";
 
 
 export default {
     name: "SinglePost",
-    components: {Search, Categories, Side, Comment},
+    components: {EditCommentModal, Search, Categories, Side, Comment},
     props: ['id'],
     data() {
       return {
-          post: {}
+          post: {},
+          comments: [],
+          message: '',
+          commentId: null
       }
     },
     methods: {
@@ -47,10 +61,24 @@ export default {
                 .then(data => {
                     this.post = data;
                 })
+        },
+        getComments: function () {
+            fetch(`/api/comments/${this.id}`).then(response => response.json())
+                .then(comments => {
+                    this.comments = comments.data;
+                    console.log("comments:", comments.data)
+                })
+        },
+        showEditModal: function (comment) {
+            this.commentId = comment.id;
+            this.message = comment.message;
+
+            $(this.$refs.editCommentModal.$el).modal('show')
         }
     },
     mounted() {
         this.getPost()
+        this.getComments()
     }
 }
 </script>
