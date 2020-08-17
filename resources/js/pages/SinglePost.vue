@@ -15,7 +15,6 @@
                 <hr>
 
                 <LeaveComment
-                    v-bind:postId="post.id"
                     v-bind:callbackGetComments="getComments"
                 />
 

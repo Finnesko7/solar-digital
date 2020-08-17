@@ -65,12 +65,8 @@ class CommentService
         }
     }
 
-    public function create(array $data, $sub = false)
+    public function create(array $data)
     {
-        if (!$sub) {
-            $data['main'] = 1;
-        }
-
         return $this->commentRepository->create($data);
     }
 }

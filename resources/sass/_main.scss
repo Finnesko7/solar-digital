@@ -11,6 +11,7 @@ body {
         display: flex;
         flex-wrap: wrap;
     }
+
 }
 
 footer {
@@ -35,6 +36,12 @@ footer {
         .comment-buttons {
             display: flex;
             justify-content: end;
+        }
+
+        .comment-on {
+            font-size: 10pt;
+            color: grey;
+            cursor: pointer;
         }
     }
 }

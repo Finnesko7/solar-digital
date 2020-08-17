@@ -17,7 +17,6 @@
 export default {
     name: "LeaveComment",
     props: {
-        postId: Number,
         callbackGetComments: Function
     },
     methods: {
@@ -29,7 +28,8 @@ export default {
                 },
                 body: JSON.stringify({
                     message: this.text,
-                    post_id: this.postId
+                    post_id: this.$route.params.id,
+                    main: 1
                 })
             }).then(response => response.json())
             .then(data => {
@@ -37,7 +37,6 @@ export default {
                     this.text = '';
                     this.callbackGetComments();
                 }
-
             })
         }
     },

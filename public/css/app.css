@@ -10941,3 +10941,9 @@ footer {
   justify-content: end;
 }
 
+.media .media-body .comment-on {
+  font-size: 10pt;
+  color: grey;
+  cursor: pointer;
+}
+
