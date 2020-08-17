@@ -53,6 +53,8 @@ class CommentController extends BaseController
 
     public function destroySub($id)
     {
-
+        response()->json([
+            'success' => $this->commentService->deleteSub($id)
+        ]);
     }
 }

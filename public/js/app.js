@@ -2272,7 +2272,7 @@ __webpack_require__.r(__webpack_exports__);
       }).then(function (response) {
         return response.json();
       }).then(function (data) {
-        if (data.success) _this.deleted = true;
+        if (data.success) _this.getSubComments();
       });
     }
   }
@@ -38738,7 +38738,7 @@ var render = function() {
       "div",
       { staticClass: "media-body" },
       [
-        _c("h5", { staticClass: "mt-0" }, [_vm._v("Author 2")]),
+        _c("h5", { staticClass: "mt-0" }, [_vm._v("Author")]),
         _vm._v(" "),
         _c("div", { staticClass: "comment-buttons" }, [
           _c(
@@ -38751,7 +38751,7 @@ var render = function() {
             "button",
             {
               staticClass: "btn badge-danger btn-sm",
-              on: { click: function($event) {} }
+              on: { click: _vm.remove }
             },
             [_c("i", { staticClass: "fas fa-trash" })]
           )

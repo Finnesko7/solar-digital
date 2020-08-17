@@ -2,13 +2,13 @@
     <div class="media">
         <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
         <div class="media-body">
-            <h5 class="mt-0">Author 2</h5>
+            <h5 class="mt-0">Author</h5>
 
             <div class="comment-buttons">
                 <button class="btn btn-light btn-sm" v-on:click="edit">
                     <i class="fas fa-pencil-alt"></i>
                 </button>
-                <button class="btn badge-danger btn-sm" v-on:click="">
+                <button class="btn badge-danger btn-sm" v-on:click="remove">
                     <i class="fas fa-trash"></i>
                 </button>
             </div>
@@ -89,7 +89,7 @@
                     method: 'DELETE'
                 }).then(response => response.json())
                     .then(data => {
-                        if (data.success) this.deleted = true;
+                        if (data.success) this.getSubComments()
                     })
             }
         }
