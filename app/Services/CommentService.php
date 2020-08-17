@@ -69,4 +69,15 @@ class CommentService
     {
         return $this->commentRepository->create($data);
     }
+
+    public function deleteSub($id)
+    {
+        $comment = $this->commentRepository->getById($id);
+
+        if ($comment->id) {
+            $this->commentRepository->updateParentId($comment->id, $comment->parent_id);
+
+            $this->commentRepository->deleteById($comment->id);
+        }
+    }
 }

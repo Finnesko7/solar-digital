@@ -21,5 +21,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::get('posts', 'PostController@all');
 Route::resource('post', 'PostController');
 Route::resource('comment', 'CommentController')->only(['store', 'destroy']);
+
 Route::get('comments/{post}', 'CommentController@all');
 Route::get('comments/sub/{comment}', 'CommentController@getSubComments');
+
+Route::delete('comment/sub', 'CommentController@destroySub');

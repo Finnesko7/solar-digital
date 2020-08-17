@@ -83,6 +83,14 @@
             },
             closeAddComment: function () {
                 this.leaveComment = false
+            },
+            remove: function () {
+                fetch(`/api/comment/${this.id}`, {
+                    method: 'DELETE'
+                }).then(response => response.json())
+                    .then(data => {
+                        if (data.success) this.deleted = true;
+                    })
             }
         }
     }

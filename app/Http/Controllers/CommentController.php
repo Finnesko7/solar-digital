@@ -50,4 +50,9 @@ class CommentController extends BaseController
 
         return response()->json($list);
     }
+
+    public function destroySub($id)
+    {
+
+    }
 }

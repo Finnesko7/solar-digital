@@ -2263,6 +2263,17 @@ __webpack_require__.r(__webpack_exports__);
     },
     closeAddComment: function closeAddComment() {
       this.leaveComment = false;
+    },
+    remove: function remove() {
+      var _this = this;
+
+      fetch("/api/comment/".concat(this.id), {
+        method: 'DELETE'
+      }).then(function (response) {
+        return response.json();
+      }).then(function (data) {
+        if (data.success) _this.deleted = true;
+      });
     }
   }
 });
