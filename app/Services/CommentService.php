@@ -4,15 +4,30 @@ namespace App\Services;
 
 use App\Repositories\CommentRepository;
 
+/**
+ * Class CommentService
+ * @package App\Services
+ */
 class CommentService
 {
+    /**
+     * @var CommentRepository
+     */
     private $commentRepository;
 
+    /**
+     * CommentService constructor.
+     * @param CommentRepository $commentRepository
+     */
     public function __construct(CommentRepository $commentRepository)
     {
         $this->commentRepository = $commentRepository;
     }
 
+    /**
+     * @param int $postId
+     * @return mixed
+     */
     public function getMainComments(int $postId)
     {
         $comments = $this->commentRepository->getMainByPostId($postId);
@@ -27,6 +42,10 @@ class CommentService
         return $comments;
     }
 
+    /**
+     * @param int $id
+     * @return bool
+     */
     public function delete(int $id): bool
     {
         $result = $this->commentRepository->deleteById($id);
@@ -35,7 +54,11 @@ class CommentService
         return $result;
     }
 
-    public function getListSubComments($id)
+    /**
+     * @param $id
+     * @return array
+     */
+    public function getListSubComments($id) : array
     {
         $list = [];
         $comments = $this->commentRepository->getSubCommentsByMainId($id);
@@ -53,6 +76,10 @@ class CommentService
         return $list;
     }
 
+    /**
+     * @param array $comments
+     * @param array $data
+     */
     private function setRecursive(array &$comments, array &$data)
     {
         foreach ($comments as $key => &$comment) {
@@ -65,12 +92,12 @@ class CommentService
         }
     }
 
-    public function create(array $data)
-    {
-        return $this->commentRepository->create($data);
-    }
 
-    public function deleteSub($id)
+    /**
+     * @param $id
+     * @return bool
+     */
+    public function deleteSub($id) : bool
     {
         $result = false;
         $comment = $this->commentRepository->getById($id);
