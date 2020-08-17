@@ -13,6 +13,12 @@
                 <hr>
                     {{ post.text }}
                 <hr>
+
+                <LeaveComment
+                    v-bind:postId="post.id"
+                    v-bind:callbackGetComments="getComments"
+                />
+
                 <Comment
                     v-for="comment in comments" :key="comment.id"
                     v-bind="comment"
@@ -26,11 +32,6 @@
                 <Side/>
             </div>
 
-            <EditCommentModal
-                v-bind:message="message"
-                v-bind:id="commentId"
-                ref="editCommentModal"
-            />
         </div>
     </div>
 </template>
@@ -40,12 +41,12 @@ import Search from "../components/post/Search";
 import Categories from "../components/post/Categories";
 import Side from "../components/post/Side";
 import Comment from "../components/comments/Comment";
-import EditCommentModal from "../components/modals/EditCommentModal";
+import LeaveComment from "../components/comments/LeaveComment";
 
 
 export default {
     name: "SinglePost",
-    components: {EditCommentModal, Search, Categories, Side, Comment},
+    components: {LeaveComment, Search, Categories, Side, Comment},
     props: ['id'],
     data() {
       return {

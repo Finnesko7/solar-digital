@@ -5,14 +5,30 @@
             <h5 class="mt-0">Author 2</h5>
 
             <div class="comment-buttons">
-                <button class="btn btn-light btn-sm" v-on:click="">
+                <button class="btn btn-light btn-sm" v-on:click="edit">
                     <i class="fas fa-pencil-alt"></i>
                 </button>
                 <button class="btn badge-danger btn-sm" v-on:click="">
                     <i class="fas fa-trash"></i>
                 </button>
             </div>
-            Some text ...
+            <p v-if="!editMode">{{text}}</p>
+            <textarea
+                v-if="editMode"
+                v-model="text"
+                class="form-control"
+                rows="1"
+                v-on:blur="save"
+            ></textarea>
+
+            <div class="comment-footer">
+                {{created_at}}
+            </div>
+
+            <SubComment v-if="comments"
+                        v-for="comment in comments" :key="comment.id"
+                        v-bind="comment"
+            />
         </div>
     </div>
 </template>
@@ -21,7 +37,28 @@
     export default {
         name: "SubComment",
         props: {
-            subComments: Array
+            id: Number,
+            message: String,
+            created_at: String,
+            comments: {
+                type: Array,
+                required: false
+            }
+        },
+        data() {
+            return {
+                editMode: false,
+                text: this.message
+            }
+        },
+        methods: {
+            edit: function () {
+                this.editMode = true
+            },
+            save: function () {
+                console.log("Save data ...")
+                this.editMode = false;
+            }
         }
     }
 </script>

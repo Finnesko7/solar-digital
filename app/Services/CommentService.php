@@ -37,7 +37,7 @@ class CommentService
 
     public function getListSubComments($id)
     {
-        $list = []; $test = [];
+        $list = [];
         $comments = $this->commentRepository->getSubCommentsByMainId($id);
         foreach ($comments as $comment) {
 
@@ -45,10 +45,11 @@ class CommentService
 
             if (isset($list[$comment['parent_id']]) && $comment) {
                 $list[$comment['parent_id']]['comments'][] = $comment;
-            } else {
+            } elseif ($comment) {
                 $list[$comment['id']] = $comment;
             }
         }
+
         return $list;
     }
 
@@ -62,5 +63,14 @@ class CommentService
                 $this->setRecursive($comment['comments'], $data);
             }
         }
+    }
+
+    public function create(array $data, $sub = false)
+    {
+        if (!$sub) {
+            $data['main'] = 1;
+        }
+
+        return $this->commentRepository->create($data);
     }
 }

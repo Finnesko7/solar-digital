@@ -2,21 +2,25 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CommentRequest;
 use App\Services\CommentService;
 use Illuminate\Routing\Controller as BaseController;
 
 class CommentController extends BaseController
 {
     private $commentService;
+    private $commentRepository;
 
     public function __construct(CommentService $commentService)
     {
         $this->commentService = $commentService;
     }
 
-    public function store()
+    public function store(CommentRequest $request)
     {
-        // code ...
+        $comment = $this->commentService->create($request->all());
+
+        return response()->json($comment);
     }
 
     public function all($id)

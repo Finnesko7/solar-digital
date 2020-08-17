@@ -1,18 +1,4 @@
 <template>
-<!--    <div>-->
-<!--        <div class="card my-4">-->
-<!--            <h5 class="card-header">Leave a Comment:</h5>-->
-<!--            <div class="card-body">-->
-<!--                <form>-->
-<!--                    <div class="form-group">-->
-<!--                        <textarea class="form-control" rows="3"></textarea>-->
-<!--                    </div>-->
-<!--                    <button type="submit" class="btn btn-primary">Submit</button>-->
-<!--                </form>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
-
     <div class="media mb-4" v-if="!deleted">
         <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
         <div class="media-body">
@@ -26,11 +12,18 @@
                     <i class="fas fa-trash"></i>
                 </button>
             </div>
-            {{message}}
+            <p v-if="!editMode">{{text}}</p>
+            <textarea
+                v-if="editMode"
+                v-model="text"
+                class="form-control"
+                rows="1"
+                v-on:blur="save"
+            ></textarea>
 
-            <SubComment
+            <SubComment v-for="comment in subComments" :key="comment.id"
                 v-if="showSubComments"
-                v-bind:subComments="subComments"
+                v-bind="comment"
             />
 
             <div class="comment-footer" v-if="!showSubComments">
@@ -55,14 +48,15 @@ export default {
         id: Number,
         message: String,
         count: Number,
-        created_at: String,
-        callbackShowEditModal: Function
+        created_at: String
     },
     data() {
       return {
           deleted: false,
           subComments: [],
-          showSubComments: false
+          showSubComments: false,
+          editMode: false,
+          text: this.message
       }
     },
     methods: {
@@ -81,10 +75,11 @@ export default {
             })
         },
         edit: function () {
-            this.callbackShowEditModal({
-                id: this.id,
-                message: this.message
-            })
+            this.editMode = true
+        },
+        save: function () {
+            console.log("Save data ...")
+            this.editMode = false;
         },
         getSubComments: function () {
             fetch(`/api/comments/sub/${this.id}`).then(response => response.json())
