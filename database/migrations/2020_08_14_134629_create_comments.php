@@ -19,6 +19,8 @@ class CreateComments extends Migration
             $table->text('message');
             $table->integer('parent_id')->nullable(true)->default(null);
             $table->integer('post_id');
+            $table->tinyInteger('main');
+            $table->integer('main_id');
             $table->timestamps();
         });
     }

@@ -38372,8 +38372,44 @@ render._withStripped = true
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
-var render = function () {}
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "media mb-4" }, [
+    _c("img", {
+      staticClass: "d-flex mr-3 rounded-circle",
+      attrs: { src: "http://placehold.it/50x50", alt: "" }
+    }),
+    _vm._v(" "),
+    _c("div", { staticClass: "media-body" }, [
+      _c("h5", { staticClass: "mt-0" }, [_vm._v("Author 2")]),
+      _vm._v(" "),
+      _c("div", { staticClass: "comment-buttons" }, [
+        _c(
+          "button",
+          {
+            staticClass: "btn btn-light btn-sm",
+            on: { click: function($event) {} }
+          },
+          [_c("i", { staticClass: "fas fa-pencil-alt" })]
+        ),
+        _vm._v(" "),
+        _c(
+          "button",
+          {
+            staticClass: "btn badge-danger btn-sm",
+            on: { click: function($event) {} }
+          },
+          [_c("i", { staticClass: "fas fa-trash" })]
+        )
+      ]),
+      _vm._v("\n        Some text ...\n    ")
+    ])
+  ])
+}
 var staticRenderFns = []
+render._withStripped = true
 
 
 
@@ -55550,8 +55586,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\laragon\www\solar-digital-test\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\laragon\www\solar-digital-test\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! /home/user/Desktop/finnesko/test-vue-post/resources/js/app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! /home/user/Desktop/finnesko/test-vue-post/resources/sass/app.scss */"./resources/sass/app.scss");
 
 
 /***/ })
