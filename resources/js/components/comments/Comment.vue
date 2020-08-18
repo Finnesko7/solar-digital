@@ -80,7 +80,7 @@ export default {
     },
     methods: {
         remove: function () {
-            if (this.count > 0) {
+            if (this.count > 0 || _.size(this.subComments) > 0) {
                 let success = confirm("This comment have a sub comments. All sub comments will be deleted");
 
                 if (!success) return false;

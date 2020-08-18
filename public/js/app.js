@@ -2016,7 +2016,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     remove: function remove() {
       var _this = this;
 
-      if (this.count > 0) {
+      if (this.count > 0 || _.size(this.subComments) > 0) {
         var success = confirm("This comment have a sub comments. All sub comments will be deleted");
         if (!success) return false;
       }
@@ -2572,7 +2572,11 @@ __webpack_require__.r(__webpack_exports__);
         }).then(function (response) {
           return response.json();
         }).then(function (post) {
-          if (post) _this2.callbackCloseModal();
+          if (post) {
+            _this2.callbackGetPosts();
+
+            _this2.callbackCloseModal();
+          }
         });
       } else {
         fetch("/api/post", {
@@ -56929,8 +56933,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /home/user/Desktop/finnesko/test-vue-post/resources/js/app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! /home/user/Desktop/finnesko/test-vue-post/resources/sass/app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\laragon\www\solar-digital-test\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\laragon\www\solar-digital-test\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })
