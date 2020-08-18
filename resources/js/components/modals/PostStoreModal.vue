@@ -84,7 +84,10 @@
                         body: JSON.stringify(post)
                     }).then(response => response.json())
                         .then(post => {
-                            if (post) this.callbackCloseModal();
+                            if (post) {
+                                this.callbackGetPosts();
+                                this.callbackCloseModal();
+                            }
                         })
                 } else {
                     fetch(`/api/post`, {
