@@ -92,7 +92,6 @@ class CommentService
         }
     }
 
-
     /**
      * @param $id
      * @return bool

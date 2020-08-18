@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CommentRequest;
 use App\Models\Comment;
-use App\Repositories\CommentRepository;
 use App\Services\CommentService;
 use Illuminate\Routing\Controller as BaseController;
 
@@ -18,11 +17,6 @@ class CommentController extends BaseController
      * @var CommentService
      */
     private $commentService;
-
-    /**
-     * @var CommentRepository
-     */
-    private $commentRepository;
 
     /**
      * CommentController constructor.
