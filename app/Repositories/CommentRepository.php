@@ -63,15 +63,6 @@ class CommentRepository
     }
 
     /**
-     * @param array $data
-     * @return Comment
-     */
-    public function create(array $data): Comment
-    {
-        return Comment::create($data);
-    }
-
-    /**
      * @param $id
      * @return Comment|null
      */

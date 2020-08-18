@@ -11,6 +11,8 @@
 </template>
 
 <script>
+import {createComment} from "../../actions/comment";
+
 export default {
     name: "LeaveSubComment",
     props: {
@@ -25,29 +27,21 @@ export default {
         }
     },
     methods: {
-        addComment: function () {
+        addComment: async function () {
             this.leaveComment = false;
-            console.log("main id>>>", this.mainId)
 
             if (this.text) {
-                fetch(`/api/comment`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-type': 'application/json; charset=UTF-8'
-                    },
-                    body: JSON.stringify({
-                        message: this.text,
-                        main_id: this.mainId,
-                        post_id: this.$route.params.id,
-                        parent_id: this.parentId
-                    })
-                }).then(response => response.json())
-                    .then(data => {
-                        if (data.id) {
-                            this.text = '';
-                            this.cbGetSubComments();
-                        }
-                    })
+                let comment = await createComment({
+                            message: this.text,
+                            main_id: this.mainId,
+                            post_id: this.$route.params.id,
+                            parent_id: this.parentId
+                        });
+
+                if (comment.id) {
+                    this.text = '';
+                    this.cbGetSubComments();
+                }
             }
 
             this.cbCloseAddComment()

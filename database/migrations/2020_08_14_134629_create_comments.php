@@ -15,12 +15,11 @@ class CreateComments extends Migration
     {
         Schema::create('comments', function (Blueprint $table) {
             $table->id();
-            $table->string('author');
             $table->text('message');
             $table->integer('parent_id')->nullable(true)->default(null);
             $table->integer('post_id');
-            $table->tinyInteger('main');
-            $table->integer('main_id');
+            $table->tinyInteger('main')->default(0);
+            $table->integer('main_id')->default(0);
             $table->timestamps();
         });
     }

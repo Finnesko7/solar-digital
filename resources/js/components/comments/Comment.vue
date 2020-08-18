@@ -57,6 +57,7 @@
 <script>
 import SubComment from "./SubComment";
 import LeaveSubComment from "./LeaveSubComment";
+import {updateComment} from "../../actions/comment";
 
 export default {
     name: "Comment",
@@ -87,22 +88,20 @@ export default {
 
             fetch(`/api/comment/${this.id}`, {
                 method: 'DELETE'
-            }).then(response => response.json())
-                .then(data => {
-                    if (data.success) this.deleted = true;
-                })
+            }).then(response => {
+                if (response.status === 204) this.deleted = true;
+            });
         },
         edit: function () {
             this.editMode = true
         },
-        save: function () {
-            console.log("Save data ...")
-            this.editMode = false;
+        save: async function () {
+            let comment = await updateComment(this.id, this.text);
+            if (comment) this.editMode = false
         },
         getSubComments: function () {
             fetch(`/api/comments/sub/${this.id}`).then(response => response.json())
                 .then(data => {
-                    console.log("data sub comments:", data)
                     this.subComments = data;
                     this.showSubComments = true;
                 })

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CommentRequest;
+use App\Models\Comment;
 use App\Repositories\CommentRepository;
 use App\Services\CommentService;
 use Illuminate\Routing\Controller as BaseController;
@@ -26,12 +27,10 @@ class CommentController extends BaseController
     /**
      * CommentController constructor.
      * @param CommentService $commentService
-     * @param CommentRepository $commentRepository
      */
-    public function __construct(CommentService $commentService, CommentRepository $commentRepository)
+    public function __construct(CommentService $commentService)
     {
         $this->commentService = $commentService;
-        $this->commentRepository = $commentRepository;
     }
 
     /**
@@ -40,7 +39,7 @@ class CommentController extends BaseController
      */
     public function store(CommentRequest $request)
     {
-        $comment = $this->commentRepository->create($request->all());
+        $comment = Comment::create($request->all());
 
         return response()->json($comment);
     }
@@ -60,7 +59,7 @@ class CommentController extends BaseController
      */
     public function destroy($id)
     {
-        $status = 200;
+        $status = 204;
         $success = true;
 
         if (!$this->commentService->delete($id))
@@ -92,6 +91,18 @@ class CommentController extends BaseController
     {
         response()->json([
             'success' => $this->commentService->deleteSub($id)
-        ]);
+        ], 204);
+    }
+
+    /**
+     * @param CommentRequest $request
+     * @param Comment $comment
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function update(CommentRequest $request, Comment $comment)
+    {
+        $comment->update($request->all());
+
+        return response()->json($comment);
     }
 }

@@ -10,6 +10,7 @@ $factory->define(\App\Models\Post::class, function (Faker $faker) {
         'title' => $faker->sentence,
         'text' => $faker->paragraph,
         'description' => $faker->sentence,
-        'image' => $faker->sentence
+        'image' => $faker->sentence,
+        'created_at' => date('Y-m-d')
     ];
 });

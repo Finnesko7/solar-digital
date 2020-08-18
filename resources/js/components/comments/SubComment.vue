@@ -52,6 +52,7 @@
 
 <script>
     import LeaveSubComment from "./LeaveSubComment";
+    import {updateComment} from "../../actions/comment";
     export default {
         name: "SubComment",
         components: {LeaveSubComment},
@@ -77,9 +78,9 @@
             edit: function () {
                 this.editMode = true
             },
-            save: function () {
-                console.log("Save data ...")
-                this.editMode = false;
+            save: async function () {
+                let comment = await updateComment(this.id, this.text);
+                if (comment) this.editMode = false
             },
             closeAddComment: function () {
                 this.leaveComment = false
@@ -87,10 +88,9 @@
             remove: function () {
                 fetch(`/api/comment/${this.id}`, {
                     method: 'DELETE'
-                }).then(response => response.json())
-                    .then(data => {
-                        if (data.success) this.getSubComments()
-                    })
+                }).then(response => {
+                    if (response.status === 204) this.getSubComments()
+                });
             }
         }
     }

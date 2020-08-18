@@ -14,30 +14,25 @@
 </template>
 
 <script>
+import {createComment} from "../../actions/comment";
+
 export default {
     name: "LeaveComment",
     props: {
         callbackGetComments: Function
     },
     methods: {
-        addComment: function () {
-            fetch(`/api/comment`, {
-                method: 'POST',
-                headers: {
-                    'Content-type': 'application/json; charset=UTF-8'
-                },
-                body: JSON.stringify({
-                    message: this.text,
-                    post_id: this.$route.params.id,
-                    main: 1
-                })
-            }).then(response => response.json())
-            .then(data => {
-                if (data.id) {
-                    this.text = '';
-                    this.callbackGetComments();
-                }
-            })
+        addComment: async function () {
+            let comment = await createComment({
+                message: this.text,
+                post_id: this.$route.params.id,
+                main: 1
+            });
+
+            if (comment.id) {
+                this.text = '';
+                this.callbackGetComments();
+            }
         }
     },
     data() {
