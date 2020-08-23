@@ -4,7 +4,6 @@ namespace App\Repositories;
 
 use App\Models\Comment;
 use Illuminate\Support\Facades\DB;
-use Ramsey\Collection\Collection;
 
 /**
  * Class CommentRepository
