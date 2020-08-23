@@ -21,6 +21,8 @@ class CreateComments extends Migration
             $table->tinyInteger('main')->default(0);
             $table->integer('main_id')->default(0);
             $table->timestamps();
+
+            $table->index(['main', 'main_id', 'post_id', 'parent_id']);
         });
     }
 
