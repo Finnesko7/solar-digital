@@ -33,7 +33,7 @@ class CommentController extends BaseController
      */
     public function store(CommentRequest $request)
     {
-        $comment = Comment::create($request->all());
+        $comment = $this->commentService->create($request->all());
 
         return response()->json($comment);
     }
@@ -76,16 +76,6 @@ class CommentController extends BaseController
         $list = $this->commentService->getListSubComments($id);
 
         return response()->json($list);
-    }
-
-    /**
-     * @param $id
-     */
-    public function destroySub($id)
-    {
-        response()->json([
-            'success' => $this->commentService->deleteSub($id)
-        ], 204);
     }
 
     /**

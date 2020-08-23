@@ -37,6 +37,9 @@ class CommentTest extends TestCase
             'post_id' => $post->id,
             'main' => 1,
         ]);
+
+        $comment = Comment::find(1);
+        $this->assertTrue((bool)$comment->id);
     }
 
     /**
@@ -69,6 +72,9 @@ class CommentTest extends TestCase
             'parent_id' => $mainComment->id,
             'post_id' => $post->id,
         ]);
+
+        $comment = Comment::find(2);
+        $this->assertTrue((bool)$comment->id);
     }
 
     /**
@@ -109,5 +115,8 @@ class CommentTest extends TestCase
 
         $response = $this->delete(sprintf('%s/%s', '/api/comment', $comment->id));
         $response->assertStatus(204);
+
+        $deletedComment = Comment::find($comment->id);
+        $this->assertTrue($deletedComment === null);
     }
 }

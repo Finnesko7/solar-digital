@@ -24,6 +24,15 @@ class CommentService
         $this->commentRepository = $commentRepository;
     }
 
+
+    /**
+     * @param array $data
+     */
+    public function create(array $data)
+    {
+        return $this->commentRepository->create($data);
+    }
+
     /**
      * @param int $postId
      * @return mixed
@@ -48,8 +57,17 @@ class CommentService
      */
     public function delete(int $id): bool
     {
-        $result = $this->commentRepository->deleteById($id);
-        if ($result) $this->commentRepository->deleteByMainId($id);
+        $result = false;
+        $comment = $this->commentRepository->getById($id);
+        if ($comment) {
+            if ($comment->main) {
+                $result = $this->commentRepository->deleteById($id);
+                if ($result) $this->commentRepository->deleteByMainId($id);
+            } else {
+                $this->commentRepository->updateParentId($comment->id, $comment->parent_id);
+                $result = $this->commentRepository->deleteById($comment->id);
+            }
+        }
 
         return $result;
     }
@@ -90,23 +108,5 @@ class CommentService
                 $this->setRecursive($comment['comments'], $data);
             }
         }
-    }
-
-    /**
-     * @param $id
-     * @return bool
-     */
-    public function deleteSub($id) : bool
-    {
-        $result = false;
-        $comment = $this->commentRepository->getById($id);
-
-        if ($comment->id) {
-            $this->commentRepository->updateParentId($comment->id, $comment->parent_id);
-
-            $result = $this->commentRepository->deleteById($comment->id);
-        }
-
-        return $result;
     }
 }

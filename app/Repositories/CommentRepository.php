@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\Comment;
 use Illuminate\Support\Facades\DB;
+use Ramsey\Collection\Collection;
 
 /**
  * Class CommentRepository
@@ -79,7 +80,12 @@ class CommentRepository
     public function updateParentId(int $oldId, int $newId)
     {
         return Comment::where('parent_id', $oldId)->update([
-           'parent_id' => $newId
+            'parent_id' => $newId
         ]);
+    }
+
+    public function create(array $data): ?Comment
+    {
+        return Comment::create($data);
     }
 }

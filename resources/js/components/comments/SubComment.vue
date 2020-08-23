@@ -21,7 +21,6 @@
                 v-on:blur="save"
             ></textarea>
 
-
             <div class="comment-on"
                  v-if="!leaveComment"
                  v-on:click="()=> this.leaveComment = true"
